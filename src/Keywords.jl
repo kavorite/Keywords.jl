@@ -27,5 +27,4 @@ function keywordize(text, embeddings; α=0.85, k=Inf, ϵ=1e-8, S=Set())
     end
     T[sort(1:n; by=(i -> r′[i]), rev=true)]
 end
-
 end
