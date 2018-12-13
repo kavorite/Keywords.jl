@@ -1,6 +1,6 @@
 module Keywords
 
-using WordTokenizers
+import WordTokenizers.tokenize
 
 function Base.cos(a::Vector, b::Vector) a ⋅ b / norm(a) / norm(b) end
 
