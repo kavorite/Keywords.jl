@@ -2,6 +2,8 @@ module Keywords
 
 import WordTokenizers.tokenize
 
+export keywordize, cos
+
 function Base.cos(a::Vector, b::Vector) a ⋅ b / norm(a) / norm(b) end
 
 function keywordize(text, embeddings; α=0.85, k=Inf, ϵ=1e-8, S=Set())
