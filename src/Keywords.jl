@@ -1,19 +1,33 @@
 module Keywords
 
-import WordTokenizers.tokenize
+using WordTokenizers
+using LinearAlgebra
+using SparseArrays
+using Embeddings
 
-export keywordize, cos
+export keywordize, dictionary, cos
+
+function dictionary(embeddings::Embeddings.EmbeddingTable)
+    Dict((embeddings.vocab[i], embeddings.embeddings[:, i])
+         for i in 1:length(embeddings.vocab))
+end
 
 function Base.cos(a::Vector, b::Vector) a ⋅ b / norm(a) / norm(b) end
 
+function mkM(text::AbstractString, D, S=Set())
+    T = unique!(tokenize(text))
+    T = [t for t ∈ T if haskey(D, t) && t ∉ S]
+    n = length(T)
+    M =  reshape([cos(D[t], D[w])
+                  for t ∈ T for w ∈ T], (n, n))
+    (M, T, n)
+end
+
+# PageRank
 function keywordize(text, embeddings; α=0.85, k=Inf, ϵ=1e-8, S=Set())
     # create a symmetric matrix of cosine similarities between terms
-    D = embeddings
-    T = [t for t ∈ unique(tokenize(text)) if haskey(D, t) && t ∉ S]
+    M, T, n = mkM(text, embeddings, S)
     n = length(T)
-    M = Symmetric(SparseMatrixCSC(
-        reshape([cos(D[t], D[w])
-                for t ∈ T for w ∈ T], (n, n))))
     r′ = fill(1/n, (1, n))
     r = ones(1, n)
     M′ = (α * M) + (((1 - α) / n) * ones(n, n))
