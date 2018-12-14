@@ -5,7 +5,7 @@ using Embeddings
 using LightGraphs
 using SimpleWeightedGraphs
 
-export keywordize, dictionary, cos
+export keywords, dictionary, cos
 
 function dictionary(embeddings::Embeddings.EmbeddingTable)
     Dict((embeddings.vocab[i], embeddings.embeddings[:, i])
@@ -26,7 +26,6 @@ function termAdjacency(text::AbstractString, D, S=Set())
 end
 
 function keywords(text, embeddings; α=0.85, k=Inf, ϵ=1e-6, stops=Set())
-    # create a symmetric matrix of cosine similarities between terms
     T = [t for t ∈ unique!(tokenize(text)) if haskey(D, t) && t ∉ stops]
     M = SimpleWeightedDiGraph(length(T))
     for (i, t) ∈ enumerate(T)
