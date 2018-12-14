@@ -1,9 +1,9 @@
 module Keywords
 
 using WordTokenizers
-using LinearAlgebra
-using SparseArrays
 using Embeddings
+using LightGraphs
+using SimpleWeightedGraphs
 
 export keywordize, dictionary, cos
 
@@ -14,32 +14,29 @@ end
 
 function Base.cos(a::Vector, b::Vector) a ⋅ b / norm(a) / norm(b) end
 
-function mkM(text::AbstractString, D, S=Set())
-    T = unique!(tokenize(text))
-    T = [t for t ∈ T if haskey(D, t) && t ∉ S]
+function termAdjacency(text::AbstractString, D, S=Set())
+    T = [t for t ∈ unique!(tokenize(text))
+         if haskey(D, t) && t ∉ S]
     n = length(T)
-    M =  reshape([cos(D[t], D[w])
-                  for t ∈ T for w ∈ T], (n, n))
+    M = [cos(D[t], D[w]) for t ∈ T for w ∈ T]
+    M = reshape(M, (n, n))
+    M = SparseMatrixCSC(M)
+    for i ∈ 1:n  M[i, :] ./= sum(M[i, :]) end
     (M, T, n)
 end
 
-# PageRank
-function keywordize(text, embeddings; α=0.85, k=Inf, ϵ=1e-8, S=Set())
+function keywords(text, embeddings; α=0.85, k=Inf, ϵ=1e-6, stops=Set())
     # create a symmetric matrix of cosine similarities between terms
-    M, T, n = mkM(text, embeddings, S)
-    n = length(T)
-    r′ = fill(1/n, (1, n))
-    r = ones(1, n)
-    M′ = (α * M) + (((1 - α) / n) * ones(n, n))
-    i = 1
-    # power method: asymptotic convergence
-    while norm(r′ - r, 2) > ϵ
-        i <= k || error(StackOverflowError())
-        r = r′
-        r′ *= M′
-        i += 1
+    T = [t for t ∈ unique!(tokenize(text)) if haskey(D, t) && t ∉ stops]
+    M = SimpleWeightedDiGraph(length(T))
+    for (i, t) ∈ enumerate(T)
+        for (j, w) ∈ enumerate(T[[1:i-1; i+1:length(T)]])
+            add_edge!(M, i, j, cos(embeddings[t], embeddings[w]))
+        end
     end
-    T[sort(1:n; by=(i -> r′[i]), rev=true)]
+    r = pagerank(M)
+    sorted = sort(1:length(T); by=(i -> r[i]), rev=true)
+    T[sorted], r[sorted]
 end
 
 end

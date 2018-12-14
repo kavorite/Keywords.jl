@@ -1,3 +1,5 @@
 julia 1.0
 WordTokenizers 0.2.0
 Embeddings 0.3.0
+LightGraphs 1.2.0
+SimpleWeightedGraphs 1.1.0
