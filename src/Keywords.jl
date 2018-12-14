@@ -26,7 +26,7 @@ function termAdjacency(text::AbstractString, D, S=Set())
 end
 
 function keywords(text, embeddings; α=0.85, k=Inf, ϵ=1e-6, stops=Set())
-    T = [t for t ∈ unique!(tokenize(text)) if haskey(D, t) && t ∉ stops]
+    T = [t for t ∈ unique!(tokenize(text)) if haskey(embeddings, t) && t ∉ stops]
     M = SimpleWeightedDiGraph(length(T))
     for (i, t) ∈ enumerate(T)
         for (j, w) ∈ enumerate(T[[1:i-1; i+1:length(T)]])
