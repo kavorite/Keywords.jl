@@ -1,7 +1,7 @@
 authors = ["kavorite <kavorite@gmail.com>"]
 name = "Keywords"
 uuid = "6d111930-fe86-11e8-0a1a-89a9a6e24cd1"
-version = "0.1.0"
+version = "1.0.0"
 
 [deps]
 WordTokenizers = "796a5d58-b03d-544a-977e-18100b691f6e"
