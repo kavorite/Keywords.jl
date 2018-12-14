@@ -4,6 +4,7 @@ using WordTokenizers
 using Embeddings
 using LightGraphs
 using SimpleWeightedGraphs
+using LinearAlgebra
 
 export keywords, dictionary, cos
 
