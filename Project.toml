@@ -4,5 +4,7 @@ uuid = "6d111930-fe86-11e8-0a1a-89a9a6e24cd1"
 version = "0.1.0"
 
 [deps]
-WordTokenizers = "0.2.0"
-Embeddings = "0.3.0"
+WordTokenizers = "796a5d58-b03d-544a-977e-18100b691f6e"
+Embeddings = "c5bfea45-b7f1-5224-a596-15500f5db411"
+LightGraphs = "093fc24a-ae57-5d10-9952-331d41423f4d"
+SimpleWeightedGraphs = "47aef6b3-ad0c-573a-a1e2-d07658019622"
