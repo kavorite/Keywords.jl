@@ -13,7 +13,7 @@ function dictionary(embeddings::Embeddings.EmbeddingTable)
          for i in 1:length(embeddings.vocab))
 end
 
-function Base.cos(a::Vector, b::Vector) a ⋅ b / norm(a) / norm(b) end
+function Base.cos(a::Vector, b::Vector) dot(a, b) / norm(a) / norm(b) end
 
 function termAdjacency(text::AbstractString, D, S=Set())
     T = [t for t ∈ unique!(tokenize(text))
