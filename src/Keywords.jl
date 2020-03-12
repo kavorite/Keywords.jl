@@ -40,5 +40,4 @@ function keywords(text, embeddings; α=0.85, k=Inf, ϵ=1e-6, stops=Set())
     sorted = sort(1:length(T); by=(i -> r[i]))
     T[sorted], r[sorted]
 end
-
 end
